@@ -1,12 +1,29 @@
-import java.util.HashMap;
-
 public class UC7 {
 
-    public static HashMap<Character, String[]> createCharacterMap() {
+    static class CharacterPatternMap {
 
-        HashMap<Character, String[]> charMap = new HashMap<>();
+        Character character;
+        String[] pattern;
 
-        charMap.put('O', new String[]{
+        public CharacterPatternMap(Character character, String[] pattern) {
+            this.character = character;
+            this.pattern = pattern;
+        }
+
+        public Character getCharacter() {
+            return character;
+        }
+
+        public String[] getPattern() {
+            return pattern;
+        }
+    }
+
+    public static CharacterPatternMap[] createCharacterPatternMaps() {
+
+        CharacterPatternMap[] characterPatternMap = new CharacterPatternMap[4];
+
+        String[] O = {
                 "   ***   ",
                 " **   ** ",
                 "**     **",
@@ -16,9 +33,9 @@ public class UC7 {
                 "**     **",
                 " **   ** ",
                 "   ***   "
-        });
+        };
 
-        charMap.put('P', new String[]{
+        String[] P = {
                 "******  ",
                 "**   ** ",
                 "**    **",
@@ -28,9 +45,9 @@ public class UC7 {
                 "**      ",
                 "**      ",
                 "**      "
-        });
+        };
 
-        charMap.put('S', new String[]{
+        String[] S = {
                 "  ***** ",
                 " **     ",
                 "**      ",
@@ -40,21 +57,49 @@ public class UC7 {
                 "     ** ",
                 "    **  ",
                 "*****   "
-        });
+        };
 
-        return charMap;
+        String[] SPACE = {
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        ",
+                "        "
+        };
+
+        characterPatternMap[0] = new CharacterPatternMap('O', O);
+        characterPatternMap[1] = new CharacterPatternMap('P', P);
+        characterPatternMap[2] = new CharacterPatternMap('S', S);
+        characterPatternMap[3] = new CharacterPatternMap(' ', SPACE);
+
+        return characterPatternMap;
     }
 
-    public static void displayBanner(String message, HashMap<Character, String[]> charMap) {
+    public static String[] getCharacterPattern(char ch, CharacterPatternMap[] charMaps) {
 
-        int patternHeight = charMap.get('O').length;
+        for (CharacterPatternMap map : charMaps) {
+            if (map.getCharacter() == ch) {
+                return map.getPattern();
+            }
+        }
+
+        return getCharacterPattern(' ', charMaps);
+    }
+
+    public static void printMessage(String message, CharacterPatternMap[] charMaps) {
+
+        int patternHeight = charMaps[0].getPattern().length;
 
         for (int line = 0; line < patternHeight; line++) {
 
             StringBuilder sb = new StringBuilder();
 
             for (char ch : message.toCharArray()) {
-                String[] pattern = charMap.get(ch);
+                String[] pattern = getCharacterPattern(ch, charMaps);
                 sb.append(pattern[line]).append(" ");
             }
 
@@ -64,9 +109,10 @@ public class UC7 {
 
     public static void main(String[] args) {
 
-        HashMap<Character, String[]> charMap = createCharacterMap();
+        CharacterPatternMap[] charMaps = createCharacterPatternMaps();
+
         String message = "OOPS";
 
-        displayBanner(message, charMap);
+        printMessage(message, charMaps);
     }
 }
